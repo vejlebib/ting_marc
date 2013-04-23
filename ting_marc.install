@@ -1,0 +1,16 @@
+<?php
+function ting_marc_schema() {
+  $schema['ting_marc'] = array(
+    'description' => 'Holds marcExchange settings.',
+    'fields' => array(
+      'id' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'ting_type' => array('type' => 'varchar','length' => 32,'not null' => TRUE, 'default' => ''),
+      'marc_field' => array('type' => 'varchar','length' => 32,'not null' => TRUE, 'default' => ''),
+      'marc_subfield' => array('type' => 'varchar','length' => 32,'not null' => TRUE, 'default' => ''),
+      'marc_label' => array('type' => 'varchar','length' => 250,'not null' => TRUE, 'default' => ''),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
