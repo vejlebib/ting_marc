@@ -1,18 +1,34 @@
 <?php
+/**
+ * @file
+ * ting_marc admin functions.
+ */
 
+/**
+ * Show current settings.
+ *
+ * @return string
+ *   HTML.
+ */
 function ting_marc_overview_page() {
   $result = db_query("SELECT * FROM {ting_marc} ORDER BY ting_type, marc_field, marc_subfield", array(), array('fetch' => PDO::FETCH_ASSOC));
 
   $types = ting_marc_types(TRUE);
 
-  $header = array(t('Type'), t('Field'), t('Subfield'), t('Label'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(
+    t('Type'),
+    t('Field'),
+    t('Subfield'),
+    t('Label'),
+    array('data' => t('Operations'), 'colspan' => '2'),
+  );
   $rows = array();
   foreach ($result as $data) {
     $row = array();
-    $row[] = array('data'=> $types[$data['ting_type']]);
-    $row[] = array('data'=> $data['marc_field']);
-    $row[] = array('data'=> $data['marc_subfield']);
-    $row[] = array('data'=> $data['marc_label']);
+    $row[] = array('data' => $types[$data['ting_type']]);
+    $row[] = array('data' => $data['marc_field']);
+    $row[] = array('data' => $data['marc_subfield']);
+    $row[] = array('data' => $data['marc_label']);
     $row[] = array('data' => l(t('edit'), TING_MARC_ADMIN . '/' . $data['id'] . '/edit'));
     $row[] = array('data' => l(t('delete'), TING_MARC_ADMIN . '/' . $data['id'] . '/delete'));
     $rows[] = $row;
@@ -21,6 +37,9 @@ function ting_marc_overview_page() {
   return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
+/**
+ * Settings form.
+ */
 function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
   $form['action'] = array(
     '#type' => 'hidden',
@@ -30,7 +49,6 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
   $form['id'] = array(
     '#type' => 'hidden',
   );
-
 
   if ($action == 'add' || empty($item)) {
     $item = array(
@@ -88,7 +106,7 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
 }
 
 /**
- * Process menu and menu item add/edit form submissions.
+ * Save setting.
  */
 function ting_marc_edit_item_submit($form, &$form_state) {
   $item = &$form_state['values'];
@@ -119,16 +137,25 @@ function ting_marc_edit_item_submit($form, &$form_state) {
   $form_state['redirect'] = TING_MARC_ADMIN;
 }
 
+/**
+ * Delete setting page.
+ */
 function ting_marc_delete_item($id) {
   return drupal_get_form('ting_marc_delete_item_confirm', $id);
 }
 
+/**
+ * Delete confirmation form/page.
+ */
 function ting_marc_delete_item_confirm($form, &$form_state, $id) {
   $form['#marc_id'] = $id;
   $caption = '<p>' . t('This action cannot be undone.') . '</p>';
-  return confirm_form($form, t('Are you sure you want to delete this setting?'), TING_MARC_ADMIN, $caption, t('Delete'));
+  return confirm_form($form, t('Are you sure you want to delete this setting?'), TING_MARC_ADMIN, filter_xss($caption), t('Delete'));
 }
 
+/**
+ * Delete setting.
+ */
 function ting_marc_delete_item_confirm_submit($form, &$form_state) {
   $id = $form['#marc_id'];
   $form_state['redirect'] = TING_MARC_ADMIN;
@@ -138,8 +165,16 @@ function ting_marc_delete_item_confirm_submit($form, &$form_state) {
   drupal_set_message(t('Setting has been deleted.'));
 }
 
-
-function ting_marc_types($pair = false) {
+/**
+ * Ting types.
+ *
+ * @param bool $pair
+ *   Return pairs as key => value or just values.
+ *
+ * @return array
+ *   Ting types.
+ */
+function ting_marc_types($pair = FALSE) {
   // Source: http://www.danbib.dk/docs/abm/types.xml
   $types = array(
     'Akvarel',
@@ -244,7 +279,8 @@ function ting_marc_types($pair = false) {
     foreach ($types as $type) {
       $result[$type] = t($type);
     }
-  } else {
+  }
+  else {
     $result = array_map('t', $types);
   }
   return $result;

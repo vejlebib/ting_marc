@@ -1,4 +1,11 @@
 <?php
+/**
+ * @file
+ * Ting marcExchange module.
+ *
+ * Shows additional data on ting object page.
+ */
+
 
 define('TING_MARC_ADMIN', 'admin/config/ting/marc');
 
@@ -49,12 +56,6 @@ function ting_marc_menu() {
  * Implements hook_ting_pre_execute().
  *
  * Add "includeMarcXchange" to request.
- *
- * @param TingClientRequest $request
- *   Ting request object.
- *
- * @return array
- *   Additional parameters for request.
  */
 function ting_marc_ting_pre_execute($request) {
   if ($request->getParameter('action') == 'getObjectRequest') {
@@ -65,9 +66,6 @@ function ting_marc_ting_pre_execute($request) {
 
 /**
  * Implements hook_ting_post_execute().
- *
- * @param mixed $response
- * @return void
  */
 function ting_marc_ting_post_execute($request, $response, $raw_response) {
   if (!$request->getParameter('includeMarcXchange')) {
@@ -82,7 +80,7 @@ function ting_marc_ting_post_execute($request, $response, $raw_response) {
   $marc = $raw_response->searchResponse->result->searchResult[0]->collection->object[0]->collection->record;
 
   // @todo add filter to get only required info.
-  $marcData = array();
+  $marc_data = array();
   foreach ($marc->datafield as $f) {
     $data = array();
 
@@ -105,10 +103,10 @@ function ting_marc_ting_post_execute($request, $response, $raw_response) {
       }
     }
 
-    $marcData[$f->{'@tag'}->{'$'}] = $data;
+    $marc_data[$f->{'@tag'}->{'$'}] = $data;
   }
 
-  return array('marcexchange' => $marcData);
+  return array('marcexchange' => $marc_data);
 }
 
 
@@ -121,7 +119,7 @@ function ting_marc_block_view($delta = '') {
     case 'ting_marc_data':
       $items = array();
 
-      // Read the object from cache
+      // Read the object from cache.
       $trail = menu_get_active_trail();
       $object_id = $trail[1]['original_map'][2];
       $object = ting_get_object($object_id);
@@ -187,7 +185,6 @@ function ting_marc_block_info() {
  * @return array
  *   Settings.
  */
-
 function _ting_marc_get_settings($type) {
   $res = db_select('ting_marc', 'tm')
     ->fields('tm')
@@ -196,6 +193,9 @@ function _ting_marc_get_settings($type) {
   return $res;
 }
 
+/**
+ * Implements hook_theme().
+ */
 function ting_marc_theme() {
   return array(
     'ting_marc_data' => array(
