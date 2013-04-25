@@ -122,17 +122,10 @@ function ting_marc_edit_item_submit($form, &$form_state) {
     'marc_label' => $item['marc_label'],
   );
 
-  if ($action == 'add') {
-    db_insert('ting_marc')
-      ->fields($fields)
-      ->execute();
-  }
-  else {
-    db_update('ting_marc')
-      ->fields($fields)
-      ->condition('id', $id)
-      ->execute();
-  }
+  db_merge('ting_marc')
+    ->fields($fields)
+    ->condition('id', $id)
+    ->execute();
 
   $form_state['redirect'] = TING_MARC_ADMIN;
 }
@@ -160,7 +153,9 @@ function ting_marc_delete_item_confirm_submit($form, &$form_state) {
   $id = $form['#marc_id'];
   $form_state['redirect'] = TING_MARC_ADMIN;
 
-  db_delete('ting_marc')->condition('id', $id)->execute();
+  db_delete('ting_marc')
+    ->condition('id', $id)
+    ->execute();
 
   drupal_set_message(t('Setting has been deleted.'));
 }

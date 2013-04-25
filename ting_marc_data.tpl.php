@@ -5,7 +5,9 @@
  * Template for ting_marc_data block.
  *
  * Variables:
- *   $rows - array of array('label' => '...', 'text' => '...').
+ *   $rows - An associative array containing:
+ *     label - Label for the data.
+ *     text - Data.
  */
 
 foreach ($rows as $row):

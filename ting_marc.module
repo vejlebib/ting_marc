@@ -81,29 +81,29 @@ function ting_marc_ting_post_execute($request, $response, $raw_response) {
 
   // @todo add filter to get only required info.
   $marc_data = array();
-  foreach ($marc->datafield as $f) {
+  foreach ($marc->datafield as $field) {
     $data = array();
 
-    if (empty($f->subfield)) {
+    if (empty($field->subfield)) {
       continue;
     }
 
     // Get data from subfield if it is an object.
-    if (is_object($f->subfield)) {
-      $data[$f->subfield->{'@code'}->{'$'}] = $f->subfield->{'$'};
+    if (is_object($field->subfield)) {
+      $data[$field->subfield->{'@code'}->{'$'}] = $field->subfield->{'$'};
     }
     else {
       // Subfield is an array.
-      foreach ($f->subfield as $sf) {
+      foreach ($field->subfield as $subfield) {
         // Skip subfields without value.
-        if (empty($sf->{'$'})) {
+        if (empty($subfield->{'$'})) {
           continue;
         }
-        $data[$sf->{'@code'}->{'$'}] = $sf->{'$'};
+        $data[$subfield->{'@code'}->{'$'}] = $subfield->{'$'};
       }
     }
 
-    $marc_data[$f->{'@tag'}->{'$'}] = $data;
+    $marc_data[$field->{'@tag'}->{'$'}] = $data;
   }
 
   return array('marcexchange' => $marc_data);
@@ -131,11 +131,7 @@ function ting_marc_block_view($delta = '') {
       $type = $object->getType();
       $settings = _ting_marc_get_settings($type);
 
-      if (empty($settings)) {
-        break;
-      }
-
-      if (empty($object->marcexchange)) {
+      if (empty($settings) || empty($object->marcexchange)) {
         break;
       }
 
@@ -178,6 +174,8 @@ function ting_marc_block_info() {
 
 /**
  * Get ting_marc settings from db for given type.
+ *
+ * These settings are set in admin interface.
  *
  * @param string $type
  *   Type name.

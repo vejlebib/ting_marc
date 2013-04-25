@@ -3,4 +3,3 @@ description = Displays additional data for Ting objects.
 package = Ding!
 core = 7.x
 dependencies[] = ting
-files[] = ting_marc_data.tpl.php
