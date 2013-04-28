@@ -3,3 +3,4 @@ description = Displays additional data for Ting objects.
 package = Ding!
 core = 7.x
 dependencies[] = ting
+version = 1.11
