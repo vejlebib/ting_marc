@@ -1,0 +1,5 @@
+name = Ting marcExchange
+description = Displays additional data for Ting objects.
+package = Ding!
+core = 7.x
+dependencies[] = ting
