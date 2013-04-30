@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Ting marcExchange module.
+ * Ting marcXchange module.
  *
  * Shows additional data on ting object page.
  */
@@ -16,17 +16,32 @@ function ting_marc_menu() {
   $items = array();
 
   $items[TING_MARC_ADMIN] = array(
-    'title' => 'Ting marcExchange settings',
+    'title' => 'Ting marcXchange',
     'description' => 'Configure additional marcXchange fields.',
     'page callback' => 'ting_marc_overview_page',
-    'access arguments' => array('administer ting settings'),
+    'access arguments' => array('administer ting_marc settings'),
+    'file' => 'ting_marc.admin.inc',
+  );
+  $items[TING_MARC_ADMIN . '/list'] = array(
+    'title' => 'marcXchange fields',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'file' => 'ting_marc.admin.inc',
+  );
+
+  $items[TING_MARC_ADMIN . '/settings'] = array(
+    'title' => 'Module settings',
+    'description' => 'Configure module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ting_marc_module_settings'),
+    'access arguments' => array('administer ting_marc settings'),
+    'type' => MENU_LOCAL_TASK,
     'file' => 'ting_marc.admin.inc',
   );
   $items[TING_MARC_ADMIN . '/add'] = array(
-    'title' => 'Add setting',
+    'title' => 'Add field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_marc_edit_item', 'add'),
-    'access arguments' => array('administer ting settings'),
+    'access arguments' => array('administer ting_marc settings'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'ting_marc.admin.inc',
   );
@@ -34,7 +49,7 @@ function ting_marc_menu() {
     'title' => 'Edit setting',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_marc_edit_item', 'edit', 4),
-    'access arguments' => array('administer ting settings'),
+    'access arguments' => array('administer ting_marc settings'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
     'file' => 'ting_marc.admin.inc',
@@ -43,7 +58,7 @@ function ting_marc_menu() {
     'title' => 'Delete setting',
     'page callback' => 'ting_marc_delete_item',
     'page arguments' => array(4),
-    'access arguments' => array('administer ting settings'),
+    'access arguments' => array('administer ting_marc settings'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
     'file' => 'ting_marc.admin.inc',
@@ -103,10 +118,13 @@ function ting_marc_ting_post_execute($request, $response, $raw_response) {
       }
     }
 
-    $marc_data[$field->{'@tag'}->{'$'}] = $data;
+    if (empty($marc_data[$field->{'@tag'}->{'$'}])) {
+      $marc_data[$field->{'@tag'}->{'$'}] = array();
+    }
+    $marc_data[$field->{'@tag'}->{'$'}] += $data;
   }
 
-  return array('marcexchange' => $marc_data);
+  return array('marcxchange' => $marc_data);
 }
 
 
@@ -131,17 +149,26 @@ function ting_marc_block_view($delta = '') {
       $type = $object->getType();
       $settings = _ting_marc_get_settings($type);
 
-      if (empty($settings) || empty($object->marcexchange)) {
+      if (empty($settings) || empty($object->marcxchange)) {
         break;
       }
 
+      ting_mark_log(
+        "marcXchange data for object @id<br />Settings: <pre>@settings</pre><br />Data: <pre>@data</pre>",
+        array(
+          '@id' => $object_id,
+          '@settings' => print_r($settings, TRUE),
+          '@data' => print_r($object->marcxchange, TRUE),
+        )
+      );
+
       $rows = array();
       foreach ($settings as $s) {
-        if (empty($object->marcexchange[$s->marc_field][$s->marc_subfield])) {
+        if (empty($object->marcxchange[$s->marc_field][$s->marc_subfield])) {
           continue;
         }
 
-        $text = $object->marcexchange[$s->marc_field][$s->marc_subfield];
+        $text = $object->marcxchange[$s->marc_field][$s->marc_subfield];
         $row = array(
           'label' => $s->marc_label,
           'text' => $text,
@@ -166,7 +193,7 @@ function ting_marc_block_view($delta = '') {
 function ting_marc_block_info() {
   return array(
     'ting_marc_data' => array(
-      'info' => t('Ting marcExchange data'),
+      'info' => t('Ting marcXchange data'),
       'cache' => DRUPAL_CACHE_PER_PAGE,
     ),
   );
@@ -199,6 +226,31 @@ function ting_marc_theme() {
     'ting_marc_data' => array(
       'template' => 'ting_marc_data',
       'variables' => array('rows' => array()),
+    ),
+  );
+}
+
+/**
+ * Log messages to dblog.
+ *
+ * @param string $message
+ *   Message to be logged.
+ * @param array $data
+ *   Paceholder data for message.
+ */
+function ting_mark_log($message, $data=array()) {
+  if (variable_get('ting_mark_logging', 0)) {
+    watchdog('ting_marc', $message, $data, WATCHDOG_DEBUG);
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function ting_marc_permission() {
+  return array(
+    'administer ting_marc settings' => array(
+      'title' => t('Administer Ting marcXchange settings'),
     ),
   );
 }

@@ -1,6 +1,10 @@
-name = Ting marcExchange
+name = Ting marcXchange
 description = Displays additional data for Ting objects.
 package = Ding!
 core = 7.x
-dependencies[] = ting
 version = 1.11
+
+dependencies[] = ting
+
+features[features_api][] = api:1
+features[user_permission][] = administer ting_marc settings
