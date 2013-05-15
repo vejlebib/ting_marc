@@ -280,3 +280,20 @@ function ting_marc_types($pair = FALSE) {
   }
   return $result;
 }
+
+
+/**
+ * Form builder for module settings form.
+ */
+function ting_marc_module_settings($form, $form_state) {
+  $form = array();
+
+  $form['ting_mark_logging'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable logging'),
+    '#default_value' => variable_get('ting_mark_logging', 0),
+    '#description' => t("Log all errors to watchdog."),
+  );
+
+  return system_settings_form($form);
+}
