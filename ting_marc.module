@@ -153,15 +153,6 @@ function ting_marc_block_view($delta = '') {
         break;
       }
 
-      ting_mark_log(
-        "marcXchange data for object @id<br />Settings: <pre>@settings</pre><br />Data: <pre>@data</pre>",
-        array(
-          '@id' => $object_id,
-          '@settings' => print_r($settings, TRUE),
-          '@data' => print_r($object->marcxchange, TRUE),
-        )
-      );
-
       $rows = array();
       foreach ($settings as $s) {
         if (empty($object->marcxchange[$s->marc_field][$s->marc_subfield])) {
@@ -238,8 +229,8 @@ function ting_marc_theme() {
  * @param array $data
  *   Paceholder data for message.
  */
-function ting_mark_log($message, $data=array()) {
-  if (variable_get('ting_mark_logging', 0)) {
+function ting_marc_log($message, $data = array()) {
+  if (variable_get('ting_marc_logging', 0)) {
     watchdog('ting_marc', $message, $data, WATCHDOG_DEBUG);
   }
 }
