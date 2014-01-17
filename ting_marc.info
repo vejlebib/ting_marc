@@ -2,9 +2,22 @@ name = Ting marcXchange
 description = Displays additional data for Ting objects.
 package = Artesis
 core = 7.x
-version = 7.x-1.18
+version = 1.12
+
+config = admin/config/ting/marc/settings
+
+files[] = classes/TingMarcxchangeRequest.php
+files[] = classes/TingMarcxchangeResult.php
+
+files[] = lib/JsonOutput.php
+files[] = lib/OutputInterface.php
+files[] = lib/TingClientException.php
+files[] = lib/TingGenericRequest.php
+files[] = lib/TingRequestInterface.php
 
 dependencies[] = ting
+dependencies[] = virtual_field
+dependencies[] = ctools
 
 features[features_api][] = api:1
 features[user_permission][] = administer ting_marc settings
