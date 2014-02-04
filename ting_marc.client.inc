@@ -37,21 +37,15 @@ function ting_marc_load_object($id) {
  */
 function _ting_marc_load_object($id) {
   module_load_include('client.inc', 'ting');
-  // @todo Uncomment when moving to "new search" ting client.
-  // $request = ting_get_request_factory('marcxchange');
+  $urls = ting_marc_ting_request_factory();
+  $url = variable_get($urls['marcxchange']);
 
-  // @todo Remove next 5 lines when moving to "new search" ting client.
-  $factory_data = ting_marc_ting_request_factory();
-  $url = variable_get($factory_data['marcxchange'], FALSE);
-  $agency = variable_get('ting_agency', FALSE);
-  $profile = variable_get('ting_search_profile', '');
-  $request = new TingMarcxchangeRequest($url, $agency, $profile);
+  $request = new TingClientMarcXchnageRequest($url);
 
-  if (empty($request)) {
-    return NULL;
-  }
+  $request->setAgency(variable_get('ting_agency'));
+  $request->setProfile(variable_get('ting_search_profile'));
+  $request->setIdentifier($id);
 
-  $request->setId($id);
   $object = ting_execute($request);
 
   return $object;

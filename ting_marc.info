@@ -6,14 +6,9 @@ version = 1.12
 
 config = admin/config/ting/marc/settings
 
-files[] = classes/TingMarcxchangeRequest.php
-files[] = classes/TingMarcxchangeResult.php
-
-files[] = lib/JsonOutput.php
-files[] = lib/OutputInterface.php
-files[] = lib/TingClientException.php
-files[] = lib/TingGenericRequest.php
-files[] = lib/TingRequestInterface.php
+files[] = classes/TingMarcResult.php
+files[] = classes/TingMarcException.php
+files[] = classes/TingClientMarcXchnageRequest.php
 
 dependencies[] = ting
 dependencies[] = virtual_field

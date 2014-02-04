@@ -6,7 +6,7 @@
     selector = 'ting-marc-unprocessed',
     processing = 'ting-marc-processing',
     nodata = 'ting-marc-nodata',
-    visible_container = 'pane-entity-field';
+    visible_container = 'pane-ting-object-fileds';
 
   function ting_marc_fields(container) {
     var fields = [];
