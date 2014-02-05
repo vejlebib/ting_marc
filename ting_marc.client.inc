@@ -10,11 +10,12 @@
  * @param string $id
  *   Object identifier.
  *
- * @return NULL | TingMarcxchangeResult
+ * @return NULL|TingMarcxchangeResult
+ *   MarcXchange result object, or NULL on failure.
  */
 function ting_marc_load_object($id) {
   // Check cache.
-  $cid = 'marcxchange:'.$id;
+  $cid = 'marcxchange:' . $id;
   $cache = cache_get($cid);
   if (!empty($cache)) {
     return $cache->data;
@@ -33,7 +34,8 @@ function ting_marc_load_object($id) {
  * @param string $id
  *   Object identifier.
  *
- * @return NULL | TingMarcxchangeResult
+ * @return NULL|TingMarcxchangeResult
+ *   MarcXchange result object, or NULL on failure.
  */
 function _ting_marc_load_object($id) {
   module_load_include('client.inc', 'ting');
