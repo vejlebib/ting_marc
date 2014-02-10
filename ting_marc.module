@@ -162,6 +162,18 @@ function ting_marc_create_field($data) {
   );
 
   field_create_instance($instance);
+
+  // Add field to group_content group.
+  $field_group_details = field_group_load_field_group(
+    'group_materials',
+    'ting_object',
+    'ting_object',
+    'ting_object_fields'
+  );
+  $field_group_details->children[] = $field_name;
+  field_group_group_save($field_group_details);
+
+  field_cache_clear();
 }
 
 /**
