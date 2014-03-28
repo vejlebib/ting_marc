@@ -10,9 +10,6 @@ define('TING_MARC_ADMIN', 'admin/config/ting/marc');
 
 include_once __DIR__ . '/ting_marc.client.inc';
 
-drupal_add_css(drupal_get_path('module', 'ting_marc') . '/ting_marc.css');
-drupal_add_js(drupal_get_path('module', 'ting_marc') . '/ting_marc.js');
-
 /**
  * Implements hook_menu().
  */
@@ -154,24 +151,98 @@ function ting_marc_create_field($data) {
     'formatter' => array(
       'type' => 'ting_marc_ajax_formatter',
     ),
-    'display' => array(
-      'ting_object_fields' => array(
-        'label' => 'inline',
-      ),
-    ),
+    'display' => _ting_marc_field_display_settings(),
   );
 
   field_create_instance($instance);
 
-  // Add field to group_content group.
-  $field_group_details = field_group_load_field_group(
-    'group_materials',
-    'ting_object',
-    'ting_object',
-    'ting_object_fields'
+  _ting_marc_add_field_to_groups($field_name);
+}
+
+/**
+ * Get field view/group where ting_marc field must be added.
+ *
+ * @return array
+ *   Associative array with key being field view and value group name.
+ */
+function _ting_marc_field_groups() {
+  // Field view => field group mapping.
+  return array(
+    'default' => 'group_material_details',
   );
-  $field_group_details->children[] = $field_name;
-  field_group_group_save($field_group_details);
+}
+
+/**
+ * Add ting_marc field to field groups.
+ *
+ * @param string $field_name
+ *   Field name.
+ */
+function _ting_marc_add_field_to_groups($field_name) {
+  $groups = _ting_marc_field_groups();
+  foreach ($groups as $view => $group) {
+    $field_group = field_group_load_field_group(
+      $group,
+      'ting_object',
+      'ting_object',
+      $view
+    );
+    if (is_object($field_group)) {
+      $field_group->children[] = $field_name;
+      field_group_group_save($field_group);
+    }
+  }
+  field_cache_clear();
+}
+
+/**
+ * Display settings from ting_marc field.
+ *
+ * @return array
+ *   Associative array with keys being field view and values display settings.
+ */
+function _ting_marc_field_display_settings() {
+  return array(
+    'default' => array(
+      'label' => 'inline',
+    ),
+  );
+}
+
+/**
+ * Purge ting_marc field.
+ *
+ * @param string $field_name
+ *   Field name to be purged.
+ */
+function _ting_marc_purge_field($field_name) {
+  // Remove field from groups.
+  $groups = _ting_marc_field_groups();
+  foreach ($groups as $view => $group) {
+    $field_group = field_group_load_field_group(
+      $group,
+      'ting_object',
+      'ting_object',
+      $view
+    );
+    if (is_object($field_group)) {
+      $index = array_search($field_name, $field_group->children);
+      // Make sure no "deleted" fields remain.
+      while ($index) {
+        unset($field_group->children[$index]);
+        $index = array_search($field_name, $field_group->children);
+      }
+      field_group_group_save($field_group);
+    }
+  }
+
+  // Purge fields.
+  $field = field_info_field($field_name);
+  if ($field) {
+    $instance = field_info_instance('ting_object', $field_name, 'ting_object');
+    field_purge_instance($instance);
+    field_purge_field($field);
+  }
 
   field_cache_clear();
 }
@@ -279,6 +350,11 @@ function ting_marc_field_formatter_view($entity_type, $entity, $field, $instance
     $value = $entity->getId() . '|' . $settings['marc_field'] . '|' . $settings['marc_subfield'];
 
     $element[0]['#markup'] = $value;
+
+    $mod_path = drupal_get_path('module', 'ting_marc');
+    $element['#attached']['js'][] = $mod_path . '/ting_marc.js';
+    $element['#attached']['css'][] = $mod_path . '/ting_marc.css';
+
     return $element;
   }
 }

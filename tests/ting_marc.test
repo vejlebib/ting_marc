@@ -1,0 +1,63 @@
+<?php
+/**
+ * @file
+ * ting_marc.test
+ */
+
+/**
+ * Ting Marc tests.
+ */
+class TingMarcTestCase extends FieldTestCase {
+
+  /**
+   * Test info.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Ting marcXchange tests'),
+      'description' => t('Run tests for ting_marc.'),
+      'group' => t('easyDDB'),
+    );
+  }
+
+  /**
+   * Set up test.
+   */
+  public function setUp() {
+    parent::setUp(
+      array(
+        'ting_marc',
+      )
+    );
+
+    $user = $this->drupalCreateUser(array('administer ting_marc settings'));
+    $this->drupalLogin($user);
+  }
+
+  public function testCreateField() {
+    /*
+    $random = substr(md5(microtime()), 0, 6);
+    $field = array(
+      'field_name' => 'tm_' . $random,
+      'marc_label' => 'MX ' . $random,
+      'ting_type' => 'all',
+      'marc_field' => '001',
+      'marc_subfield' => 'a',
+    );
+
+    ting_marc_create_field($field);
+
+    $group = field_group_load_field_group(
+      'group_material_details',
+      'ting_object',
+      'ting_object',
+      'default'
+    );
+
+    $this->assertTrue(
+      array_search('tm_' . $random, $group->children),
+      t('Field was not added')
+    );
+    */
+  }
+}
