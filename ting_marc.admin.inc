@@ -121,10 +121,8 @@ function ting_marc_edit_item_submit($form, &$form_state) {
     module_load_include('module', 'transliteration');
   }
 
-  $item = &$form_state['values'];
-
+  $item = $form_state['values'];
   $id = $item['id'];
-  $action = $item['action'];
   unset($item['action'], $item['id']);
 
   if (empty($item['field_name'])) {
@@ -164,7 +162,13 @@ function ting_marc_delete_item($id) {
 function ting_marc_delete_item_confirm($form, &$form_state, $id) {
   $form['#marc_id'] = $id;
   $caption = '<p>' . t('This action cannot be undone.') . '</p>';
-  return confirm_form($form, t('Are you sure you want to delete this setting?'), TING_MARC_ADMIN, filter_xss($caption), t('Delete'));
+  return confirm_form(
+    $form,
+    t('Are you sure you want to delete this setting?'),
+    TING_MARC_ADMIN,
+    filter_xss($caption),
+    t('Delete')
+  );
 }
 
 /**
@@ -184,8 +188,7 @@ function ting_marc_delete_item_confirm_submit($form, &$form_state) {
     ->condition('id', $id)
     ->execute();
 
-  field_delete_field($field['field_name']);
-  field_cache_clear();
+  _ting_marc_purge_field($field['field_name']);
   drupal_set_message(t('Field has been deleted.'));
 }
 
