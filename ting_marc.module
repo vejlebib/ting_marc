@@ -417,9 +417,13 @@ function ting_marc_field_js() {
       list($id, $field, $subfield) = explode('|', $data);
       $value = ting_marc_get_data($id, $field, $subfield);
       if (!empty($value)) {
+        if (is_array($value)) {
+          $value = implode(', ', $value);
+        }
         $result[$data] = $value;
       }
     }
   }
+
   drupal_json_output($result);
 }
