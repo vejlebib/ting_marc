@@ -15,7 +15,7 @@ class TingMarcResult {
   /**
    * Object constructor.
    *
-   * @param object $result
+   * @param stdClass $result
    *   JSON decoded result from webservice.
    */
   public function __construct($result) {
