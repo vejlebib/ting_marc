@@ -42,7 +42,7 @@ function _ting_marc_load_object($id) {
   $urls = ting_marc_ting_request_factory();
   $url = variable_get($urls['marcxchange']);
 
-  $request = new TingClientMarcXchnageRequest($url);
+  $request = new TingClientMarcXchangeRequest($url);
 
   $request->setAgency(variable_get('ting_agency'));
   $request->setProfile(variable_get('ting_search_profile'));

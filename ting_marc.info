@@ -1,6 +1,6 @@
 name = Ting marcXchange
 description = Displays additional data for Ting objects.
-package = Artesis
+package = easyDDB
 core = 7.x
 version = 7.x-1.19
 
@@ -8,7 +8,9 @@ config = admin/config/ting/marc/settings
 
 files[] = classes/TingMarcResult.php
 files[] = classes/TingMarcException.php
-files[] = classes/TingClientMarcXchnageRequest.php
+files[] = classes/TingClientMarcXchangeRequest.php
+
+files[] = tests/ting_marc.test
 
 dependencies[] = ting
 dependencies[] = virtual_field
