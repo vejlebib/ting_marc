@@ -433,10 +433,14 @@ function ting_marc_field_js() {
     foreach ($fields as $data) {
       list($id, $field, $subfield) = explode('|', $data);
       $value = ting_marc_get_data($id, $field, $subfield);
+
       if (!empty($value)) {
-        if (is_array($value)) {
-          $value = implode(', ', $value);
-        }
+        $values = array();
+        array_walk_recursive($value, function($v) use (&$values) {
+          $values[] = $v;
+        });
+
+        $value = implode(', ', $values);
         $result[$data] = $value;
       }
     }
