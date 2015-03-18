@@ -433,14 +433,30 @@ function ting_marc_field_js() {
     foreach ($fields as $data) {
       list($id, $field, $subfield) = explode('|', $data);
       $value = ting_marc_get_data($id, $field, $subfield);
+
       if (!empty($value)) {
-        if (is_array($value)) {
-          $value = implode(', ', $value);
-        }
+        $values = array();
+        array_walk_recursive($value, function($v) use (&$values) {
+          $values[] = $v;
+        });
+
+        $value = implode(', ', $values);
         $result[$data] = $value;
       }
     }
   }
 
   drupal_json_output($result);
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function ting_marc_entity_view($entity, $type, $view_mode, $langcode) {
+  // Force all marcX fields to be a part details group.
+  foreach ($entity->content as $k => $v) {
+    if (isset($v['#field_type']) && $v['#field_type'] == 'ting_marc') {
+      $entity->content['#group_children'][$k] = 'group_material_details';
+    }
+  }
 }
