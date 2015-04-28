@@ -2,20 +2,14 @@ name = Ting marcXchange
 description = Displays additional data for Ting objects.
 package = easyDDB
 core = 7.x
-version = 7.x-2.0.0
-
+version = 7.x-2.0.0+easy
 config = admin/config/ting/marc/settings
-
 files[] = classes/TingMarcResult.php
 files[] = classes/TingMarcException.php
 files[] = classes/TingClientMarcXchangeRequest.php
-
 files[] = tests/ting_marc.test
-
 dependencies[] = ting
 dependencies[] = virtual_field
 dependencies[] = ctools
-
 features[features_api][] = api:1
 features[user_permission][] = administer ting_marc settings
-
