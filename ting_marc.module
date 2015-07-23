@@ -161,6 +161,8 @@ function ting_marc_create_field($data) {
       'marc_field' => $data['marc_field'],
       'marc_subfield' => $data['marc_subfield'],
       'text_processing' => FALSE,
+      'field_clickable' => $data['field_clickable'],
+      'link_index' => $data['link_index'],
     ),
     'widget' => array(
       'type' => 'hidden',
@@ -360,7 +362,6 @@ function ting_marc_field_formatter_view($entity_type, $entity, $field, $instance
     if (!in_array($instance['settings']['ting_type'], $types)) {
       return;
     }
-
     $element = array();
     $settings = $instance['settings'];
     // Build fake value for template preprocessor.
@@ -369,6 +370,13 @@ function ting_marc_field_formatter_view($entity_type, $entity, $field, $instance
     $element[0]['#markup'] = $value;
 
     $mod_path = drupal_get_path('module', 'ting_marc');
+    $element['#attached']['js'] = array(
+      $mod_path . '/ting_marc.js' => array(),
+      array(
+        'data' => array('clickable' => $settings['field_clickable'], 'link_index' => $settings['link_index']),
+        'type' => 'setting',
+      ),
+    );
     $element['#attached']['js'][] = $mod_path . '/ting_marc.js';
     $element['#attached']['css'][] = $mod_path . '/ting_marc.css';
 

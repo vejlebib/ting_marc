@@ -77,3 +77,28 @@ function ting_marc_update_7001() {
   ));
   db_add_unique_key('ting_marc', 'field_name', array('field_name'));
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Add index link and clickable options for a field.
+ */
+function ting_marc_update_7002() {
+  $clickable = array(
+    'description' => t('Bool identifier for clickable field.'),
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_add_field('ting_marc', 'field_clickable', $clickable);
+
+  $link_index = array(
+    'description' => t('Link index definition.'),
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_add_field('ting_marc', 'link_index', $link_index);
+}

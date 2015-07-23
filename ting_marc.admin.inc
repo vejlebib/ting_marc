@@ -102,7 +102,24 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
     '#default_value' => $item['marc_label'],
     '#required' => TRUE,
   );
-
+  $form['clickable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('This field should be clickable'),
+    '#description' => t('If selected, values from this MARC field will be clickable. </br> All values will be separated by comma and clickable.'),
+    '#default_value' => $item['field_clickable'],
+  );
+  $link_address = l(
+    'http://opensearch.addi.dk/4.0.1/opensearch_cql.xml',
+    'http://opensearch.addi.dk/4.0.1/opensearch_cql.xml',
+    array('attributes' => array('target' => '_blank'))
+  );
+  $form['link_index'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Enter the index to link to:'),
+    '#attributes' => array('placeholder' => array(t('For example: phrase.creator'))),
+    '#default_value' => $item['link_index'],
+    '#description' => t('Link indexes can be found at !link', array('!link' => $link_address)),
+  );
   $form['field_name'] = array(
     '#type' => 'hidden',
     '#default_value' => $item['field_name'],
@@ -137,6 +154,8 @@ function ting_marc_edit_item_submit($form, &$form_state) {
     'marc_subfield' => $item['marc_subfield'],
     'marc_label' => $item['marc_label'],
     'field_name' => $item['field_name'],
+    'field_clickable' => $item['clickable'],
+    'link_index' => $item['link_index'],
   );
 
   db_merge('ting_marc')
