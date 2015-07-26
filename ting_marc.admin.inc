@@ -11,7 +11,7 @@
  *   HTML.
  */
 function ting_marc_overview_page() {
-  $result = db_query("SELECT * FROM {ting_marc} ORDER BY ting_type, marc_field, marc_subfield", array(), array('fetch' => PDO::FETCH_ASSOC));
+  $result = db_query("SELECT * FROM {ting_marc} ORDER BY ting_type, marc_field, marc_subfield, field_clickable, link_index", array(), array('fetch' => PDO::FETCH_ASSOC));
 
   $types = ting_marc_types(TRUE);
 
@@ -21,6 +21,8 @@ function ting_marc_overview_page() {
     t('Subfield'),
     t('Label'),
     t('Field name'),
+    t('Clickable'),
+    t('Link index'),
     array('data' => t('Operations'), 'colspan' => '2'),
   );
   $rows = array();
@@ -31,6 +33,8 @@ function ting_marc_overview_page() {
     $row[] = array('data' => $data['marc_subfield']);
     $row[] = array('data' => $data['marc_label']);
     $row[] = array('data' => $data['field_name']);
+    $row[] = array('data' => $data['field_clickable']);
+    $row[] = array('data' => $data['link_index']);
     $row[] = array('data' => l(t('edit'), TING_MARC_ADMIN . '/' . $data['id'] . '/edit'));
     $row[] = array('data' => l(t('delete'), TING_MARC_ADMIN . '/' . $data['id'] . '/delete'));
     $rows[] = $row;
@@ -51,7 +55,6 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
   $form['id'] = array(
     '#type' => 'hidden',
   );
-
   if ($action == 'add' || empty($item)) {
     $item = array(
       'ting_type' => '',
@@ -59,6 +62,8 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
       'marc_subfield' => '',
       'marc_label' => '',
       'field_name' => '',
+      'field_clickable' => '',
+      'link_index' => '',
     );
   }
   else {

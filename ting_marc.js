@@ -19,7 +19,10 @@
     if (fields.length > 0) {
       $.post(
         Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting/marc/fields',
-        {ting_marc_fields: fields},
+        {ting_marc_fields: fields,
+         ting_marc_clickable: Drupal.settings.clickable,
+         ting_marc_link_index: Drupal.settings.link_index
+        },
         function(data) {
           $('.' + processing, container).each(function(){
             var field = $(this),
@@ -28,17 +31,7 @@
               field.addClass(nodata);
             }
             else {
-              if (Drupal.settings.clickable == 1) {
-                var links = data[_data].split(", ");
-                var linkdata = [];
-                for (var i = 0; i < links.length; i++) {
-                  linkdata.push('<a href="/search/ting/' + Drupal.settings.link_index + '=' + links[i] + '">' + links[i] + '</a>');
-                };
-                field.find('.field-item').html(linkdata.join(', '));
-              }
-              else {
-                field.find('.field-item').html(data[_data]);
-              };
+              field.find('.field-item').html(data[_data]);
             }
             field.removeClass(processing);
           });
