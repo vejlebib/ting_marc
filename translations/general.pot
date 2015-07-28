@@ -3,15 +3,15 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  ting_marc.admin.inc: n/a
-#  ting_marc.module: n/a
-#  ting_marc.info: n/a
+#  profiles/ding2/modules/ting_marc/ting_marc.admin.inc: n/a
+#  profiles/ding2/modules/ting_marc/ting_marc.module: n/a
+#  profiles/ding2/modules/ting_marc/ting_marc.info: n/a
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-19 16:14+0100\n"
+"POT-Creation-Date: 2015-07-28 11:31+0300\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -20,127 +20,127 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ting_marc.admin.inc:19;79
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:19;79
 msgid "Type"
 msgstr ""
 
-#: ting_marc.admin.inc:20
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:20
 msgid "Field"
 msgstr ""
 
-#: ting_marc.admin.inc:21
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:21
 msgid "Subfield"
 msgstr ""
 
-#: ting_marc.admin.inc:22;101
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:22;101
 msgid "Label"
 msgstr ""
 
-#: ting_marc.admin.inc:23
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:23
 msgid "Field name"
 msgstr ""
 
-#: ting_marc.admin.inc:24
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:24
 msgid "Operations"
 msgstr ""
 
-#: ting_marc.admin.inc:34
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:34
 msgid "edit"
 msgstr ""
 
-#: ting_marc.admin.inc:35
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:35
 msgid "delete"
 msgstr ""
 
-#: ting_marc.admin.inc:82
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:82
 msgid "Ting item type"
 msgstr ""
 
-#: ting_marc.admin.inc:87
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:87
 msgid "Marc field"
 msgstr ""
 
-#: ting_marc.admin.inc:94
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:94
 msgid "Marc subfield"
 msgstr ""
 
-#: ting_marc.admin.inc:111
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:111
 msgid "Save"
 msgstr ""
 
-#: ting_marc.admin.inc:164
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:164
 msgid "This action cannot be undone."
 msgstr ""
 
-#: ting_marc.admin.inc:167
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:167
 msgid "Are you sure you want to delete this setting?"
 msgstr ""
 
-#: ting_marc.admin.inc:170
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:170
 msgid "Delete"
 msgstr ""
 
-#: ting_marc.admin.inc:192
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:192
 msgid "Field has been deleted."
 msgstr ""
 
-#: ting_marc.admin.inc:326
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:326
 msgid "Enable logging"
 msgstr ""
 
-#: ting_marc.admin.inc:328
+#: profiles/ding2/modules/ting_marc/ting_marc.admin.inc:328
 msgid "Log all errors to watchdog."
 msgstr ""
 
-#: ting_marc.module:103
+#: profiles/ding2/modules/ting_marc/ting_marc.module:103
 msgid "Administer Ting marcXchange settings"
 msgstr ""
 
-#: ting_marc.module:275;20 ting_marc.info:0
+#: profiles/ding2/modules/ting_marc/ting_marc.module:275;20 profiles/ding2/modules/ting_marc/ting_marc.info:0
 msgid "Ting marcXchange"
 msgstr ""
 
-#: ting_marc.module:276
+#: profiles/ding2/modules/ting_marc/ting_marc.module:276
 msgid "Ting marcXchange field"
 msgstr ""
 
-#: ting_marc.module:294
+#: profiles/ding2/modules/ting_marc/ting_marc.module:294
 msgid "Ajaxified"
 msgstr ""
 
-#: ting_marc.module:21
+#: profiles/ding2/modules/ting_marc/ting_marc.module:21
 msgid "Configure additional marcXchange fields."
 msgstr ""
 
-#: ting_marc.module:27
+#: profiles/ding2/modules/ting_marc/ting_marc.module:27
 msgid "marcXchange fields"
 msgstr ""
 
-#: ting_marc.module:33
+#: profiles/ding2/modules/ting_marc/ting_marc.module:33
 msgid "Module settings"
 msgstr ""
 
-#: ting_marc.module:34
+#: profiles/ding2/modules/ting_marc/ting_marc.module:34
 msgid "Configure module."
 msgstr ""
 
-#: ting_marc.module:42
+#: profiles/ding2/modules/ting_marc/ting_marc.module:42
 msgid "Add field"
 msgstr ""
 
-#: ting_marc.module:50
+#: profiles/ding2/modules/ting_marc/ting_marc.module:50
 msgid "Edit setting"
 msgstr ""
 
-#: ting_marc.module:59
+#: profiles/ding2/modules/ting_marc/ting_marc.module:59
 msgid "Delete setting"
 msgstr ""
 
-#: ting_marc.info:0
+#: profiles/ding2/modules/ting_marc/ting_marc.info:0
 msgid "Displays additional data for Ting objects."
 msgstr ""
 
-#: ting_marc.info:0
+#: profiles/ding2/modules/ting_marc/ting_marc.info:0
 msgid "easyDDB"
 msgstr ""
 
