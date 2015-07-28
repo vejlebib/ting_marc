@@ -449,7 +449,7 @@ function ting_marc_field_js() {
         array_walk_recursive($value, function($v) use (&$values) {
           $values[] = $v;
         });
-        if ($clickable == 1) {
+        if ($clickable) {
           $links = array();
           foreach ($values as $value) {
             $links[] = l($value, '/search/ting/' . $link_index . '=' . $value);
