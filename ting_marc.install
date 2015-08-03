@@ -47,14 +47,14 @@ function ting_marc_schema() {
         'default' => '',
       ),
       'field_clickable' => array(
-        'description' => t('Bool identifier for clickable field.'),
+        'description' => 'Bool identifier for clickable field.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
       ),
       'link_index' => array(
-        'description' => t('Link index definition.'),
+        'description' => 'Link index definition.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
