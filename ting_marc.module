@@ -452,7 +452,7 @@ function ting_marc_field_js() {
         if ($clickable) {
           $links = array();
           foreach ($values as $value) {
-            $links[] = l($value, '/search/ting/' . $link_index . '=' . $value);
+            $links[] = l($value, '/search/ting/' . $link_index . '="' . $value . '"');
           }
           $value = implode(', ', $links);
         }
