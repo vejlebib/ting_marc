@@ -11,7 +11,7 @@
  *   HTML.
  */
 function ting_marc_overview_page() {
-  $result = db_query("SELECT * FROM {ting_marc} ORDER BY ting_type, marc_field, marc_subfield", array(), array('fetch' => PDO::FETCH_ASSOC));
+  $result = db_query("SELECT * FROM {ting_marc} ORDER BY ting_type, marc_field, marc_subfield, field_clickable, link_index", array(), array('fetch' => PDO::FETCH_ASSOC));
 
   $types = ting_marc_types(TRUE);
 
@@ -21,6 +21,8 @@ function ting_marc_overview_page() {
     t('Subfield'),
     t('Label'),
     t('Field name'),
+    t('Clickable'),
+    t('Link index'),
     array('data' => t('Operations'), 'colspan' => '2'),
   );
   $rows = array();
@@ -31,6 +33,8 @@ function ting_marc_overview_page() {
     $row[] = array('data' => $data['marc_subfield']);
     $row[] = array('data' => $data['marc_label']);
     $row[] = array('data' => $data['field_name']);
+    $row[] = array('data' => $data['field_clickable']);
+    $row[] = array('data' => $data['link_index']);
     $row[] = array('data' => l(t('edit'), TING_MARC_ADMIN . '/' . $data['id'] . '/edit'));
     $row[] = array('data' => l(t('delete'), TING_MARC_ADMIN . '/' . $data['id'] . '/delete'));
     $rows[] = $row;
@@ -51,7 +55,6 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
   $form['id'] = array(
     '#type' => 'hidden',
   );
-
   if ($action == 'add' || empty($item)) {
     $item = array(
       'ting_type' => '',
@@ -59,6 +62,8 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
       'marc_subfield' => '',
       'marc_label' => '',
       'field_name' => '',
+      'field_clickable' => '',
+      'link_index' => '',
     );
   }
   else {
@@ -102,7 +107,24 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
     '#default_value' => $item['marc_label'],
     '#required' => TRUE,
   );
-
+  $form['clickable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('This field should be clickable'),
+    '#description' => t('If selected, values from this MARC field will be clickable. </br> All values will be separated by comma and clickable.'),
+    '#default_value' => $item['field_clickable'],
+  );
+  $link_address = l(
+    'http://opensearch.addi.dk/4.0.1/opensearch_cql.xml',
+    'http://opensearch.addi.dk/4.0.1/opensearch_cql.xml',
+    array('attributes' => array('target' => '_blank'))
+  );
+  $form['link_index'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Enter the index to link to:'),
+    '#attributes' => array('placeholder' => array(t('For example: phrase.creator'))),
+    '#default_value' => $item['link_index'],
+    '#description' => t('Link indexes can be found at !link', array('!link' => $link_address)),
+  );
   $form['field_name'] = array(
     '#type' => 'hidden',
     '#default_value' => $item['field_name'],
@@ -137,6 +159,8 @@ function ting_marc_edit_item_submit($form, &$form_state) {
     'marc_subfield' => $item['marc_subfield'],
     'marc_label' => $item['marc_label'],
     'field_name' => $item['field_name'],
+    'field_clickable' => $item['clickable'],
+    'link_index' => $item['link_index'],
   );
 
   db_merge('ting_marc')

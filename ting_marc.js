@@ -6,9 +6,8 @@
     processing = 'ting-marc-processing',
     nodata = 'ting-marc-nodata';
 
-  function ting_marc_fields(container) {
+  function ting_marc_fields(container, settings) {
     var fields = [];
-
     $('.' + selector, container).each(function() {
       var data = $(this).data('ting-marc');
       if (data) {
@@ -17,16 +16,18 @@
       $(this).removeClass(selector);
       $(this).addClass(processing);
     });
-
     if (fields.length > 0) {
       $.post(
         Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting/marc/fields',
-        {ting_marc_fields: fields},
+        {
+          ting_marc_fields: fields,
+          ting_marc_clickable: Drupal.settings.clickable,
+          ting_marc_link_index: Drupal.settings.link_index
+        },
         function(data) {
           $('.' + processing, container).each(function(){
             var field = $(this),
               _data = field.data('ting-marc');
-
             if (typeof(data[_data]) == "undefined") {
               field.addClass(nodata);
             }
@@ -41,8 +42,8 @@
   }
 
   Drupal.behaviors.ting_marc = {
-    attach : function(context) {
-      ting_marc_fields(context);
+    attach : function(context, settings) {
+      ting_marc_fields(context, settings);
     }
   };
 
