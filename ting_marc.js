@@ -7,37 +7,46 @@
     nodata = 'ting-marc-nodata';
 
   function ting_marc_fields(container, settings) {
-    var fields = [];
+    var fields_obj = {};
+    var index = 0;
     $('.' + selector, container).each(function() {
-      var data = $(this).data('ting-marc');
-      if (data) {
-        fields.push(data);
+      var field = {
+        data: $(this).data('ting-marc'),
+        clickable: $(this).data('ting-clickable'),
+        link_index: $(this).data('ting-link_index')
+      };
+
+      if (field.data) {
+        fields_obj[index] = field;
       }
       $(this).removeClass(selector);
       $(this).addClass(processing);
+      index++;
     });
-    if (fields.length > 0) {
-      $.post(
-        Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting/marc/fields',
-        {
-          ting_marc_fields: fields,
-          ting_marc_clickable: Drupal.settings.clickable,
-          ting_marc_link_index: Drupal.settings.link_index
-        },
-        function(data) {
-          $('.' + processing, container).each(function(){
-            var field = $(this),
-              _data = field.data('ting-marc');
-            if (typeof(data[_data]) == "undefined") {
-              field.addClass(nodata);
-            }
-            else {
-              field.find('.field-item').html(data[_data]);
-            }
-            field.removeClass(processing);
+
+    if (!jQuery.isEmptyObject(fields_obj)) {
+      $.ajax({
+        url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting/marc/fields',
+        dataType: 'json',
+        type: 'POST',
+        data: fields_obj,
+        success: function(data) {
+          $.each(data, function() {
+            $('.' + processing, container).each(function(index, value) {
+              var field = $(this),
+                  _data = $(field).data('ting-marc'),
+                  data_field = data[index];
+               if (typeof(data_field[_data]) == "undefined") {
+                field.addClass(nodata);
+              }
+              else {
+                field.find('.field-item').html(data_field[_data]);
+              }
+              field.removeClass(processing);
+            });
           });
         }
-      );
+      });
     }
   }
 
