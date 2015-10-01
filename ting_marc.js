@@ -8,8 +8,7 @@
 
   function ting_marc_fields(container, settings) {
     var fields_obj = {};
-    var index = 0;
-    $('.' + selector, container).each(function() {
+    $('.' + selector, container).each(function(index, value) {
       var field = {
         data: $(this).data('ting-marc'),
         clickable: $(this).data('ting-clickable'),
@@ -21,7 +20,6 @@
       }
       $(this).removeClass(selector);
       $(this).addClass(processing);
-      index++;
     });
 
     if (!jQuery.isEmptyObject(fields_obj)) {
