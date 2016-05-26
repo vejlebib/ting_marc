@@ -4,6 +4,9 @@
  * ting_marc admin functions.
  */
 
+define('STATUS_INSERT', 1);
+define('STATUS_UPDATE', 2);
+
 /**
  * Show current settings.
  *
@@ -144,9 +147,6 @@ function ting_marc_edit_item_submit($form, &$form_state) {
   }
 
   $item = $form_state['values'];
-  $id = $item['id'];
-  unset($item['action'], $item['id']);
-
   if (empty($item['field_name'])) {
     $value = drupal_html_class($item['ting_type'] . '_' . $item['marc_label']);
     $value = str_replace('-', '_', $value);
@@ -163,10 +163,14 @@ function ting_marc_edit_item_submit($form, &$form_state) {
     'link_index' => $item['link_index'],
   );
 
-  db_merge('ting_marc')
+  $result = db_merge('ting_marc')
+    ->key(array('field_name' => $item['field_name']))
     ->fields($fields)
-    ->condition('id', $id)
     ->execute();
+
+  if ($result == STATUS_UPDATE) {
+    drupal_set_message(t('Field @name was successfully updated. If you want to create another field insert another type or label.', array('@name' => $item['field_name'])));
+  }
 
   ting_marc_create_field($fields);
 
