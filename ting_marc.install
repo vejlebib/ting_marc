@@ -5,7 +5,14 @@
  */
 
 /**
- * Implements hooh_schema().
+ * Implements hook_install.
+ */
+function ting_marc_install() {
+  _ting_fetch_well_types();
+}
+
+/**
+ * Implements hook_schema().
  */
 function ting_marc_schema() {
   $schema['ting_marc'] = array(
@@ -115,4 +122,11 @@ function ting_marc_update_7002() {
     'default' => '',
   );
   db_add_field('ting_marc', 'link_index', $link_index);
+}
+
+/**
+ * Fetch well types.
+ */
+function ting_marc_update_7003() {
+  _ting_fetch_well_types();
 }
