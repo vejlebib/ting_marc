@@ -130,13 +130,18 @@ function ting_marc_secure_permissions($role) {
  */
 function ting_marc_create_field($data) {
   $field_name = $data['field_name'];
-
+  $weight = '';
   $field = field_info_field($field_name);
+
   if ($field) {
+    $read_field = field_read_instance('ting_object', $field_name, 'ting_object');
+    $weight = $read_field['display']['default']['weight'];
     $instance = field_info_instance('ting_object', $field_name, 'ting_object');
     field_purge_instance($instance);
     field_purge_field($field);
   }
+
+  $weight = $weight ? $weight : '';
 
   $field = array(
     'field_name' => $field_name,
@@ -170,7 +175,7 @@ function ting_marc_create_field($data) {
     'formatter' => array(
       'type' => 'ting_marc_ajax_formatter',
     ),
-    'display' => _ting_marc_field_display_settings(),
+    'display' => _ting_marc_field_display_settings($weight),
   );
 
   field_create_instance($instance);
@@ -217,15 +222,21 @@ function _ting_marc_add_field_to_groups($field_name) {
 /**
  * Display settings from ting_marc field.
  *
+ * @param int $weight
+ *   Weight of existing field, default null.
+ *
  * @return array
  *   Associative array with keys being field view and values display settings.
  */
-function _ting_marc_field_display_settings() {
-  return array(
-    'default' => array(
-      'label' => 'inline',
-    ),
-  );
+function _ting_marc_field_display_settings($weight = NULL) {
+  $display_settings = array();
+  $display_settings['default']['label'] = 'inline';
+
+  if (!empty($weight)) {
+    $display_settings['default']['weight'] = $weight;
+  }
+
+  return $display_settings;
 }
 
 /**
@@ -360,7 +371,7 @@ function ting_marc_preprocess_field(&$variables, $hook) {
 function ting_marc_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   if ($display['type'] == 'ting_marc_ajax_formatter') {
     // Check if the field applies to entity.
-    $types = array($entity->getType(), 'All');
+    $types = array($entity->getType(), 'all');
     if (!in_array($instance['settings']['ting_type'], $types)) {
       return;
     }
@@ -466,16 +477,4 @@ function ting_marc_field_js() {
     }
   }
   drupal_json_output($result);
-}
-
-/**
- * Implements hook_entity_view().
- */
-function ting_marc_entity_view($entity, $type, $view_mode, $langcode) {
-  // Force all marcX fields to be a part details group.
-  foreach ($entity->content as $k => $v) {
-    if (isset($v['#field_type']) && $v['#field_type'] == 'ting_marc') {
-      $entity->content['#group_children'][$k] = 'group_material_details';
-    }
-  }
 }

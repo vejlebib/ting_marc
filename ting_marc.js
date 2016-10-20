@@ -34,13 +34,15 @@
               var field = $(this),
                   _data = $(field).data('ting-marc'),
                   data_field = data[index];
-               if (typeof(data_field[_data]) == "undefined") {
-                field.addClass(nodata);
+              if (data_field) {
+                if (typeof(data_field[_data]) == "undefined") {
+                  field.addClass(nodata);
+                }
+                else {
+                  field.find('.field-item').html(data_field[_data]);
+                }
+                field.removeClass(processing);
               }
-              else {
-                field.find('.field-item').html(data_field[_data]);
-              }
-              field.removeClass(processing);
             });
           });
         }
