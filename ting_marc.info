@@ -1,6 +1,6 @@
 name = Ting marcXchange
 description = Displays additional data for Ting objects.
-package = easyDDB
+package = easyOPAC
 core = 7.x
 version = 7.x-2.4.4+easy
 config = admin/config/ting/marc/settings
