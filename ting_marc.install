@@ -101,7 +101,7 @@ function ting_marc_update_7001() {
 
 /**
  * Implements hook_update_N().
- *~
+ *
  * Add index link and clickable options for a field.
  */
 function ting_marc_update_7002() {
