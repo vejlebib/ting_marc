@@ -130,3 +130,15 @@ function ting_marc_update_7002() {
 function ting_marc_update_7003() {
   _ting_fetch_well_types();
 }
+
+/**
+ * Updating field type.
+ */
+function ting_marc_update_7004() {
+  db_update('ting_marc')
+    ->fields(array(
+      'ting_type' => 'all',
+    ))
+    ->condition('ting_type', 'All')
+    ->execute();
+}
