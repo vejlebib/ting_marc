@@ -4,6 +4,9 @@
  * ting_marc admin functions.
  */
 
+define('STATUS_INSERT', 1);
+define('STATUS_UPDATE', 2);
+
 /**
  * Show current settings.
  *
@@ -13,7 +16,7 @@
 function ting_marc_overview_page() {
   $result = db_query("SELECT * FROM {ting_marc} ORDER BY ting_type, marc_field, marc_subfield, field_clickable, link_index", array(), array('fetch' => PDO::FETCH_ASSOC));
 
-  $types = ting_marc_types(TRUE);
+  $types = ting_marc_types();
 
   $header = array(
     t('Type'),
@@ -77,7 +80,7 @@ function ting_marc_edit_item($form, &$form_state, $action, $item = NULL) {
     $form['id']['#default_value'] = $item['id'];
   }
 
-  $types = ting_marc_types(TRUE);
+  $types = ting_marc_types();
 
   $form['ting_type'] = array(
     '#type' => 'select',
@@ -144,9 +147,6 @@ function ting_marc_edit_item_submit($form, &$form_state) {
   }
 
   $item = $form_state['values'];
-  $id = $item['id'];
-  unset($item['action'], $item['id']);
-
   if (empty($item['field_name'])) {
     $value = drupal_html_class($item['ting_type'] . '_' . $item['marc_label']);
     $value = str_replace('-', '_', $value);
@@ -163,10 +163,14 @@ function ting_marc_edit_item_submit($form, &$form_state) {
     'link_index' => $item['link_index'],
   );
 
-  db_merge('ting_marc')
+  $result = db_merge('ting_marc')
+    ->key(array('field_name' => $item['field_name']))
     ->fields($fields)
-    ->condition('id', $id)
     ->execute();
+
+  if ($result == STATUS_UPDATE) {
+    drupal_set_message(t('Field @name was successfully updated. If you want to create another field insert another type or label.', array('@name' => $item['field_name'])));
+  }
 
   ting_marc_create_field($fields);
 
@@ -225,116 +229,16 @@ function ting_marc_delete_item_confirm_submit($form, &$form_state) {
  * @return array
  *   Ting types.
  */
-function ting_marc_types($pair = FALSE) {
-  // Source: http://www.danbib.dk/docs/abm/types.xml
-  $types = array(
-    'All',
-    'Akvarel',
-    'Anmeldelse',
-    'Arkitekturtegning',
-    'Artikel',
-    'Avis',
-    'Avis (net)',
-    'Avisartikel',
-    'Billedbog',
-    'Billedbånd',
-    'Billedkort',
-    'Billedtæppe',
-    'Blu ray',
-    'Bog',
-    'Bog stor skrift',
-    'CD',
-    'Cd (musik)',
-    'CD-I',
-    'CD-rom',
-    'Cd-rom (mp3)',
-    'DCC-bånd',
-    'Dias',
-    'Diskette',
-    'DTBook',
-    'DVD (film)',
-    'DVD-rom',
-    'Ebog',
-    'Emnekasse',
-    'Fastplade',
-    'Film (net)',
-    'Flipover-materiale',
-    'Flonellografmateriale',
-    'Foto',
-    'Foto-cd',
-    'Fotoreproduktion',
-    'GameBoy',
-    'GameBoy Advance',
-    'Graphic novel',
-    'Grafisk blad',
-    'Grammofonplade',
-    'Kassettelydbånd',
-    'Kort',
-    'Kunstreproduktion',
-    'Laborativt materiale',
-    'Legetøj',
-    'Lydbog (bånd)',
-    'Lydbog (cd)',
-    'Lydbog (net)',
-    'Lydbog (cd-mp3)',
-    'Maleri',
-    'Materiale til indlæringsapparat',
-    'Mikroform',
-    'Mini disc',
-    'Musik (net)',
-    'Måleapparat',
-    'Netdokument',
-    'Nintendo DS',
-    'Node',
-    'Pc-spil',
-    'Pc-spil (net)',
-    'Ordkort',
-    'Originalkunst',
-    'Periodikum',
-    'Periodikum (net)',
-    'Plakat',
-    'Planche',
-    'Playstation',
-    'Playstation 2',
-    'Playstation 3',
-    'Postkort',
-    'PSP',
-    'Punktskrift',
-    'Puslespil',
-    'Sammensat materiale',
-    'Sang',
-    'Serie',
-    'Spil',
-    'Spolelydbånd',
-    'Symbolkort',
-    'Teaterdukke',
-    'Teateropførelse',
-    'Tegneserie',
-    'Tegning',
-    'Teknisk tegning',
-    'Tidsskrift',
-    'Tidsskrift (net)',
-    'Tidsskriftsartikel',
-    'Transparent',
-    'Udstilling',
-    'Udstillingsmontage',
-    'Video',
-    'Wii',
-    'Xbox',
-    'Xbox 360',
-    'Øvelsesmodel',
-    'Årbog',
-  );
+function ting_marc_types() {
+  $ting_well_types = variable_get('ting_well_types', array());
+  $type_arr = drupal_map_assoc(array_keys($ting_well_types));
 
-  $result = array();
-  if ($pair) {
-    foreach ($types as $type) {
-      $result[$type] = t($type);
-    }
-  }
-  else {
-    $result = array_map('t', $types);
-  }
+  array_walk($type_arr, function (&$item) {
+    $item = t(ucfirst($item));
+  });
+  asort($type_arr);
+  $result = array('all' => t('All')) + $type_arr;
+
   return $result;
 }
 

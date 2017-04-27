@@ -5,7 +5,14 @@
  */
 
 /**
- * Implements hooh_schema().
+ * Implements hook_install.
+ */
+function ting_marc_install() {
+  _ting_fetch_well_types();
+}
+
+/**
+ * Implements hook_schema().
  */
 function ting_marc_schema() {
   $schema['ting_marc'] = array(
@@ -115,4 +122,41 @@ function ting_marc_update_7002() {
     'default' => '',
   );
   db_add_field('ting_marc', 'link_index', $link_index);
+}
+
+/**
+ * Fetch well types.
+ */
+function ting_marc_update_7003() {
+  _ting_fetch_well_types();
+}
+
+/**
+ * Updating field type.
+ */
+function ting_marc_update_7004() {
+  // Updating ting_marc fields settings.
+  db_update('ting_marc')
+    ->fields(array(
+      'ting_type' => 'all',
+    ))
+    ->condition('ting_type', 'All')
+    ->execute();
+
+  // Getting ting_marc field data from field_config.
+  $marc_field_ids = db_select('field_config', 'fc')
+    ->fields('fc', array('id', 'field_name'))
+    ->condition('type', 'ting_marc')
+    ->execute()
+    ->fetchAllKeyed(0, 1);
+
+  // Processing of found fields for update of their field instances.
+  foreach ($marc_field_ids as $id => $field_name) {
+    $marc_field = field_info_instance('ting_object', $field_name, 'ting_object');
+
+    if ($marc_field['settings']['ting_type'] == 'All') {
+      $marc_field['settings']['ting_type'] = 'all';
+      field_update_instance($marc_field);
+    }
+  }
 }
