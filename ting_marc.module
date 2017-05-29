@@ -212,8 +212,10 @@ function _ting_marc_add_field_to_groups($field_name) {
       $view
     );
     if (is_object($field_group)) {
-      $field_group->children[] = $field_name;
-      field_group_group_save($field_group);
+      if (!in_array($field_name, $field_group->children)) {
+        $field_group->children[] = $field_name;
+        field_group_group_save($field_group);
+      }
     }
   }
   field_cache_clear();
