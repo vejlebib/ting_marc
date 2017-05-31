@@ -13,6 +13,19 @@ function ting_marc_install() {
 }
 
 /**
+ * Re-saving fields already existing in database.
+ */
+function _ting_marc_resave_fields() {
+  $marc_fields = db_query("SELECT * FROM {ting_marc}")->fetchAll();
+
+  if (!empty($marc_fields)) {
+    foreach ($marc_fields as $marc_field) {
+      ting_marc_create_field((array) $marc_field);
+    }
+  }
+}
+
+/**
  * Implements hook_schema().
  */
 function ting_marc_schema() {
@@ -167,4 +180,5 @@ function ting_marc_update_7004() {
  */
 function ting_marc_update_7005() {
   features_feature_lock('ting_material_details', 'field_group');
+  _ting_marc_resave_fields();
 }
