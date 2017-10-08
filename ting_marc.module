@@ -8,8 +8,6 @@
 
 define('TING_MARC_ADMIN', 'admin/config/ting/marc');
 
-include_once __DIR__ . '/ting_marc.client.inc';
-
 /**
  * Implements hook_menu().
  */
