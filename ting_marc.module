@@ -431,8 +431,10 @@ function ting_marc_get_data($id, $field, $subfield) {
     return implode(' ', $result);
   }
 
-  // Default data loading.
-  $object = ting_marc_load_object($id);
+  // Default data loading: use core ting module's built-in funcionality to fetch
+  // marc objects from the data well.
+  module_load_include('client.inc', 'ting');
+  $object = ting_get_object_marcxchange($id);
   if (empty($object)) {
     return NULL;
   }
