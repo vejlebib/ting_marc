@@ -176,9 +176,10 @@ function ting_marc_update_7004() {
 }
 
 /**
- * Locking field_group component of ting_material_details feature.
+ * Does nothing in vejlebib branch. See original in master branch.
  */
 function ting_marc_update_7005() {
-  features_feature_lock('ting_material_details', 'field_group');
-  _ting_marc_resave_fields();
+  // Nothing to do in vejlebib branch. We don't need the features lock, since
+  // we use feature_override for the field_group. We may as well keep up with
+  // schema_version, so we keep an empty update function.
 }
