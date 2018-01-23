@@ -142,5 +142,5 @@ msgid "Displays additional data for Ting objects."
 msgstr "Vis yderligere information til posten."
 
 #: ting_marc.info:0
-msgid "easyDDB"
+msgid "easyOPAC"
 msgstr ""

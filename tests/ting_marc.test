@@ -16,7 +16,7 @@ class TingMarcTestCase extends FieldTestCase {
     return array(
       'name' => t('Ting marcXchange tests'),
       'description' => t('Run tests for ting_marc.'),
-      'group' => t('easyDDB'),
+      'group' => t('easyOPAC'),
     );
   }
 
