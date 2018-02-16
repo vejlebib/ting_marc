@@ -8,7 +8,6 @@
  * Implements hook_install.
  */
 function ting_marc_install() {
-  _ting_fetch_well_types();
   features_feature_lock('ting_material_details', 'field_group');
 }
 
